@@ -1,25 +1,45 @@
-import {React,useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import axios from '../api/NvhApi';
 
-export default function NvhCategoryForm({onCloseForm, onCategorySubmit}) {
+export default function NvhCategoryForm({onCloseForm, onCategorySubmit,renderNvhCategory}) {
 
   /// State
+  const [nvhId,setNvhId ]= useState("");
   const [nvhCategoryName,setNvhCategoryName]= useState("");
   const [nvhCategoryStatus,setNvhCategoryStatus]= useState(true);
+
+  useEffect(()=>{
+      setNvhId(renderNvhCategory.nvhId)
+      setNvhCategoryName(renderNvhCategory.nvhCategoryName)
+      setNvhId(renderNvhCategory.nvhCategoryStatus)
+  }) 
 
   const nvhHandleClose = ()=>{
     onCloseForm(false);
   }
   const nvhHandleSubmit = async (event )=>{
     event.preventDefault();
+    if(nvhId == 0){
+      //thêm
     let nvhCategory={
       nvhId:0,
       nvhCategoryName:nvhCategoryName,
       nvhCategoryStatus:nvhCategoryStatus,
     }
-    console.log("nvhCategory",nvhCategory)
+    console.log("nvhCategory",nvhCategory);
     await axios.post("NvhCategory",nvhCategory);
-    onCategorySubmit(nvhCategory);
+    onCategorySubmit(nvhCategory); 
+    }else{ // sửa
+      let nvhCategory ={
+          nvhId:nvhId,
+          nvhCategoryName:nvhCategoryName,
+          nvhCategoryStatus:nvhCategoryStatus
+
+      }
+      console.log("nvhCategory",nvhCategory);
+      await axios.put("NvhCategory",nvhCategory);
+      onCategorySubmit(nvhCategory);
+    }
   }
   return (
     <div>

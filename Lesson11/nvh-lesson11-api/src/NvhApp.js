@@ -24,6 +24,13 @@ function NvhApp() {
 
     // trạng thái form
     const [nvhCategoryIsForm, setNvhCategoryIsform]= useState(false);
+    // dư liệu form add edit
+    let nvhCategoryInit={
+      nvhId:0,
+      nvhCategoryName:"",
+      nvhCategoryStatus:true,
+    }
+    const [nvhCategoryEdit, setNvhCategoryEdit]= useState(nvhCategoryInit);
     const nvhHandleAddNew = (param )=>{
       setNvhCategoryIsform(param);
     }
@@ -48,16 +55,37 @@ function NvhApp() {
       setNvhCategories((prev) => [...prev]);
       setNvhCategoryIsform(false);
     };
+    // hàm sử lý sự kiện xóa 
+    const nvhHandleDelete= (nvhId)=>{
+      console.log("App-Delete-nvhId:",nvhId);
+      // hàm xóa trên api
+      //const nvhResponse = axios.delete(`https://666c2e0a49dbc5d7145cfc80.mockapi.io/nvhApi/nvhV1/NvhCategory/${nvhId}`);
+      const nvhResponse = axios.delete(`NvhCategory/${nvhId}`);
+      console.log("nvhRespone-Delete:",nvhResponse);
+      let nvhDelete= nvhCategories.filter(x=>x.nvhId !== nvhId );
+      setNvhCategories(nvhDelete);
+      console.log("Deleted:",nvhDelete);
+    }
+    // edit cate
+    const nvhHandleEdit = (nvhCategory)=>{
 
+
+      setNvhCategoryEdit(nvhCategory)
+     setNvhCategoryIsform(true); 
+    }
+    
 
     return (
       <div className="container border my-3">
         <h1>NGUYỄN VĂN HIẾU - CAll Api</h1>
         <NvhCategoryList renderNvhCategories={nvhCategories}
-                        onAddNew={nvhHandleAddNew}/>
+                        onAddNew={nvhHandleAddNew}
+                        onNvhDelete={nvhHandleDelete}
+                        onNvhEdit={nvhHandleEdit}/>
         <hr/>
         {
           nvhCategoryIsForm===true?<NvhCategoryForm 
+                                                  renderNvhCategory = {nvhCategoryEdit}
                                                   onCloseForm={nvhHandleCategoryCloseForm}
                                                   onCategorySubmit={nvhHandleCategorySubmit}/>:""
         }     

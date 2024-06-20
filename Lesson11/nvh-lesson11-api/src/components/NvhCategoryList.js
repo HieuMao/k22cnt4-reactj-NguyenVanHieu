@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function NvhCategoryList({renderNvhCategories,onAddNew }) {
+export default function NvhCategoryList({renderNvhCategories,onAddNew,onNvhDelete,onNvhEdit }) {
     console.log("renderNvhCategories: ", renderNvhCategories );
     let nvhCategoryElement = renderNvhCategories.map((nvhCategory,Index)=>{
         return(
@@ -9,6 +9,13 @@ export default function NvhCategoryList({renderNvhCategories,onAddNew }) {
                 <td>{nvhCategory.nvhId}</td>
                 <td>{nvhCategory.nvhCategoryName}</td>
                 <td>{nvhCategory.nvhCategoryStatus===true?'Hiển thị':'Tạm khóa'}</td>
+                <td>
+                <button className='btn btn-danger' 
+                    onClick={()=>nvhHandleDelete(nvhCategory.nvhId)}>Delete</button>
+                <button className='btn btn-success'
+                    onClick={()=>nvhHandleEdit(nvhCategory)}>Edit
+                </button>
+                </td>
             
             </tr>
         )
@@ -16,6 +23,19 @@ export default function NvhCategoryList({renderNvhCategories,onAddNew }) {
 
     const nvhHandleAdd = ()=> {
         onAddNew(true);
+    }
+    // hàm delete
+    const nvhHandleDelete = (nvhId)=>{       
+        if(window.confirm('Bạn có thực sự muốn xóa Category có mã ['+nvhId+'] không? ')){
+            console.log("Delete:",nvhId);
+            onNvhDelete(nvhId)
+        }else{
+
+        }
+    }
+    // hàm edit
+    const nvhHandleEdit =(nvhCategory)=>{
+        onNvhEdit(nvhCategory)
     }
   return (
     <div className='container m-2'>
